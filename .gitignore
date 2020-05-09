@@ -1,3 +1,7 @@
 Data/StackOverflow/test.tsv
 Data/StackOverflow/train.tsv
 Data/StackOverflow/validation.tsv
+data/Answers.csv
+data/Questions.csv
+data/Tags.csv
+processed_data/answer_edges.txt
