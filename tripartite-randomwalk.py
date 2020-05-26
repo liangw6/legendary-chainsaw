@@ -184,6 +184,7 @@ print(final_counts)
 
 
 # %%
+import pickle
 with open('final_counts.pkl', 'wb') as handle:
     pickle.dump(final_counts, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
