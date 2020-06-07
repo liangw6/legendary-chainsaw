@@ -246,9 +246,9 @@ def run_benchmark_parallel(curr_bench_data, n_core=8):
     chuncks_of_data = np.array_split(curr_bench_data, n_core)
 
     with Pool(n_core) as p:
-        final_accus = p.map(run_benchmark, chuncks_of_data)
+        percent, final_accus = p.map(run_benchmark, chuncks_of_data)
 #     print(final_accus)
-    return final_accus
+    return percent, final_accus
 
 
 # #### Next step 
