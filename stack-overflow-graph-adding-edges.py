@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[41]:
+# In[13]:
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -20,7 +20,7 @@ answer_file = "Answers.csv"
 edges_list_file = "answer_edges.txt"
 
 
-# In[28]:
+# In[14]:
 
 benchmark_1_data_file = "output/benchmark_1.txt"
 benchmark_2_data_file = "output/benchmark_2.txt"
@@ -33,19 +33,19 @@ tag_header = 't_'
 
 # ## Pre-processing
 
-# In[2]:
+# In[ ]:
 
 # loads data with pands, it eats up memory, but parsing with pyspark is much more work
 df = pd.read_csv("Answers.csv", encoding="ISO-8859-1")
 df.head(5)
 
 
-# In[3]:
+# In[ ]:
 
 df.shape
 
 
-# In[5]:
+# In[ ]:
 
 # Question_ids and user_ids may overlap, but that does not mean questions are users!!!
 # Soln: each question_id += max_user_id
@@ -53,7 +53,7 @@ max_user_id = df[['OwnerUserId']].max()
 max_user_id
 
 
-# In[23]:
+# In[ ]:
 
 edge_df = df[['OwnerUserId', 'ParentId']]
 # 1. drop null values
@@ -70,14 +70,14 @@ edge_df.head(2)
 
 # ## Build Graph
 
-# In[7]:
+# In[ ]:
 
 # by default, nx creates undirected edges, exactly what we want
 G = nx.read_edgelist(edges_list_file, nodetype=int, data=(('weight',float),))
 print(nx.info(G))
 
 
-# In[8]:
+# In[ ]:
 
 all_user_ids = set()
 all_question_ids = set()
@@ -92,14 +92,14 @@ print(list(all_question_ids)[:10])
 print(len(all_user_ids.intersection(all_question_ids)))
 
 
-# In[9]:
+# In[ ]:
 
 # General Data Analysis
 islands = [len(c) for c in sorted(nx.connected_components(G), key=len, reverse=True)]
 print("connected components", islands[:10])
 
 
-# In[10]:
+# In[ ]:
 
 # analyze how connected the graph is
 # connectivity of 0..... oh well
@@ -109,19 +109,19 @@ approx.node_connectivity(G)
 
 # ## Loading edges from similarity score 
 
-# In[11]:
+# In[ ]:
 
 import pickle
 with open("neighbors-10.pickle", 'rb') as data:
     similarity_data = pickle.load(data)
 
 
-# In[50]:
+# In[ ]:
 
 similarity_data
 
 
-# In[26]:
+# In[ ]:
 
 questionID = list(similarity_data.keys())
 unique_questionID = set(questionID)
@@ -133,7 +133,7 @@ print("difference:", len(unique_questionID.difference(unique_newParentID)))
 
 # ## Benchmark on similar edges
 
-# In[55]:
+# In[ ]:
 
 import random
 from collections import Counter
@@ -247,7 +247,7 @@ def run_benchmark_parallel(curr_bench_data, n_core=8):
 
     with Pool(n_core) as p:
         final_accus = p.map(run_benchmark, chuncks_of_data)
-    print(final_accus)
+#     print(final_accus)
     return final_accus
 
 
@@ -264,7 +264,7 @@ def run_benchmark_parallel(curr_bench_data, n_core=8):
 # 3. we need to store user and 100 top recommendations from random walk 
 # and calculate the correct percentage for all users at the end 
 
-# In[36]:
+# In[ ]:
 
 # load benchmark file
 b1_data = load_benchmark_data(benchmark_1_data_file)
@@ -272,7 +272,7 @@ b2_data = load_benchmark_data(benchmark_2_data_file)
 b3_data = load_benchmark_data(benchmark_3_data_file)
 
 
-# In[58]:
+# In[ ]:
 
 curr_model = G
 print(nx.info(curr_model), flush=True)
@@ -287,7 +287,7 @@ for idx, curr_bench_data in enumerate([b1_data, b2_data,b3_data]):
 # # Baseline
 # - return top 100 randomly questions for each user
 
-# In[59]:
+# In[ ]:
 
 question_user_df = edge_df.groupby(["newParentId"])["OwnerUserId"].apply(list).reset_index(name="user_list")
 question_user_df["num_user"] = question_user_df["user_list"].apply(lambda x: len(x))
