@@ -239,16 +239,16 @@ def run_benchmark(curr_bench_data):
         
     percentage = count / len(curr_bench_data)
     print("Correct percentage", percentage)
-    return percentage, recommendation_list
+    return recommendation_list
 
 def run_benchmark_parallel(curr_bench_data, n_core=8):
     # split data into chucks
     chuncks_of_data = np.array_split(curr_bench_data, n_core)
 
     with Pool(n_core) as p:
-        percent, final_accus = p.map(run_benchmark, chuncks_of_data)
+        final_accus = p.map(run_benchmark, chuncks_of_data)
 #     print(final_accus)
-    return percent, final_accus
+    return final_accus
 
 
 # #### Next step 
@@ -278,7 +278,7 @@ curr_model = G
 print(nx.info(curr_model), flush=True)
 
 for idx, curr_bench_data in enumerate([b1_data, b2_data,b3_data]):
-    accuracy, recommendation = run_benchmark_parallel(curr_bench_data)
+    recommendation = run_benchmark_parallel(curr_bench_data)
     save_to = "benchmark" + str(idx +1) + "_add_eges.pk1"
     with open(save_to, 'wb') as handle:
         pickle.dump(recommendation, handle, protocol=pickle.HIGHEST_PROTOCOL)
