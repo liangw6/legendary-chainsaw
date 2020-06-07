@@ -171,6 +171,7 @@ def random_walk_on_edge(curr_model, x, y, teleportation_alpha, origin_teleport_a
 #     starting_pos = x if x in all_user_ids else y
     y = int(y[2:]) + max_user_id
     starting_pos = int(x[2:]) if x[:2] == user_header else y
+    x = int(x[2:])
     curr_pos = starting_pos
     reacheable_count = Counter()
     for s in range(n_steps):
