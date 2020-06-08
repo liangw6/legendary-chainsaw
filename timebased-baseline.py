@@ -127,7 +127,7 @@ def run_benchmark(curr_bench_data):
             df_result = df_result.sort_values(by=["diff_time"])
             suggestions = list(df_result["ParentId"])[1:101]
 
-        correct_count += 1 if question in suggestions else 0
+        correct_count += 1 if int(question[:2]) + 7053078 in suggestions else 0
         result.append((user, question, suggestions))
     
     return correct_count / len(curr_bench_data)
@@ -144,7 +144,7 @@ for idx, curr_bench_data in enumerate([b1_data, b2_data, b3_data]):
         pickle.dump(final_accus, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     avg_accu = [np.average(i) for i in final_accus]
-    print('for benchmark {}, the accu is {}'.format(i, avg_accu))
+    print('for benchmark {}, the accu is {}'.format(idx, avg_accu))
 
 
 # %%
